@@ -1,11 +1,23 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
+pub enum TaskStatus {
+    Undefine,
+    Define,
+    TODO,
+    InProgress,
+    Cancel,
+    Done,
+    Closed,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Task {
     pub value: String,
     pub complexity: u8,
     pub priority: u8,
-    pub subtasks: Tasks
+    pub subtasks: Tasks,
+    pub status: TaskStatus
 }
 
 #[derive(Serialize, Deserialize)]
