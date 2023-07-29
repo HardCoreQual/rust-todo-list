@@ -5,7 +5,7 @@ mod tasks;
 mod tasks_file;
 
 fn main() {
-    let file_name = "tasks.txt";
+    let file_name = "tasks.json";
 
     loop {
         println!("What do you want to do?");

@@ -10,7 +10,7 @@ impl TasksFile {
     }
 
     pub fn rewrite(&self, tasks: &Tasks) {
-        std::fs::write(self.file_name.to_string(), tasks.to_content()).unwrap();
+        std::fs::write(self.file_name.to_string(), tasks.to_string()).unwrap();
     }
 
     pub fn read(&self) -> Tasks {
@@ -19,6 +19,6 @@ impl TasksFile {
             Err(_) => String::new(),
         };
 
-        Tasks::from_content(&tasks_str)
+        Tasks::from_string(&tasks_str)
     }
 }
