@@ -1,9 +1,16 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
+pub struct Task {
+    pub value: String,
+    pub complexity: u8,
+    pub priority: u8,
+    pub subtasks: Tasks
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct Tasks {
-    tasks: Vec<String>,
+    tasks: Vec<Task>,
 }
 
 impl Tasks {
@@ -27,17 +34,17 @@ impl Tasks {
         self.tasks.is_empty()
     }
 
-    pub fn iter(&self) -> std::slice::Iter<'_, String> {
+    pub fn iter(&self) -> std::slice::Iter<'_, Task> {
         self.tasks.iter()
     }
 
-    pub fn remove(&mut self, index: i32) -> Option<String> {
+    pub fn remove(&mut self, index: i32) -> Option<Task> {
         if index < 0 { return None; }
         let i = index as usize;
         if i < self.tasks.len() { Some(self.tasks.remove(i)) } else { None }
     }
 
-    pub fn add(&mut self, value: &str) {
-        self.tasks.push(value.to_string());
+    pub fn add(&mut self, task: Task) {
+        self.tasks.push(task);
     }
 }

@@ -1,5 +1,6 @@
 use std::io;
 use tasks_file::TasksFile;
+use crate::tasks::{Task, Tasks};
 
 mod tasks;
 mod tasks_file;
@@ -40,23 +41,47 @@ fn list_tasks(file_name: &str) {
         println!("You have no tasks");
     } else {
         println!("You have the following tasks:");
-        for (index, task) in tasks.iter().enumerate() {
-            println!("{}. {}", index + 1, task);
-        }
+        print_tasks(&tasks, 0);
     }
 }
 
+fn print_tasks(tasks: &Tasks, intend: u8) {
+    let padding = " ".repeat(intend as usize);
+
+    for (index, task) in tasks.iter().enumerate() {
+        println!(
+            "{}{}. {}\n priority {}, complexity {}",
+            padding,
+            index + 1,
+            task.value,
+            task.priority,
+            task.complexity,
+        );
+        print_tasks(&task.subtasks, intend + 1);
+    }
+}
 
 fn add_task(file_name: &str) {
     println!("Write your task:");
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
+    let mut task_str = String::new();
+    io::stdin().read_line(&mut task_str).unwrap();
 
-    let task = input.trim().to_string();
+    println!("Write the complexity (from 0 to 255, usually 0 is less then 30 min):");
+    let mut complexity_str = String::new();
+    io::stdin().read_line(&mut complexity_str).unwrap();
+
+    println!("Insert the priority (from 0 to 3):");
+    let mut priority_str = String::new();
+    io::stdin().read_line(&mut priority_str).unwrap();
 
     let tasks_file = TasksFile::new(file_name);
     let mut tasks = tasks_file.read();
-    tasks.add(&task);
+    tasks.add(Task {
+        value: task_str.trim().to_string(),
+        complexity: complexity_str.trim().parse::<u8>().unwrap_or(255),
+        priority: std::cmp::min(3, priority_str.trim().parse::<u8>().unwrap_or(0)),
+        subtasks: Tasks::new()
+    });
 
     tasks_file.rewrite(&tasks);
 }
